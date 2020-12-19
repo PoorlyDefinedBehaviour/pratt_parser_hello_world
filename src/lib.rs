@@ -80,7 +80,7 @@ fn expr_bp(lexer: &mut Lexer, min_bp: u8) -> S {
   };
 
   loop {
-    let op = match lexer.next() {
+    let op = match lexer.peek() {
       Token::Eof => break,
       Token::Op(op) => op,
       t => panic!("unexpected token: {:?}", t),
@@ -91,6 +91,8 @@ fn expr_bp(lexer: &mut Lexer, min_bp: u8) -> S {
     if l_bp < min_bp {
       break;
     }
+
+    lexer.next();
 
     let rhs = expr_bp(lexer, r_bp);
 
@@ -106,9 +108,9 @@ mod tests {
 
   #[test]
   fn tests() {
-    //  assert_eq!(expr("1 + 2 * 3").to_string(), "(+ 1 (* 2 3))");
+    assert_eq!(expr("1 + 2 * 3").to_string(), "(+ 1 (* 2 3))");
 
-    //    assert_eq!(expr("1").to_string(), "1");
+    assert_eq!(expr("1").to_string(), "1");
 
     assert_eq!(
       expr("a + b * c * d + e").to_string(),
